@@ -1,3 +1,4 @@
+using API.Configuration;
 using Data.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,6 +15,8 @@ builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.ResolveDependencies();
 
 var app = builder.Build();
 
