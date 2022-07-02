@@ -22,7 +22,9 @@ namespace Data.Context
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ProductDbContext).Assembly);
 
             // disabling cascading deletion - Check why did not work
-            foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys())) relationship.DeleteBehavior = DeleteBehavior.ClientSetNull;
+            foreach (var relationship in modelBuilder.Model.GetEntityTypes()
+                .SelectMany(e => e.GetForeignKeys())) 
+                relationship.DeleteBehavior = DeleteBehavior.ClientSetNull;
         }
     }
 }

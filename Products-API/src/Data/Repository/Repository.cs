@@ -63,6 +63,7 @@ namespace Data.Repository
         public void Dispose()
         {
             Db?.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }
