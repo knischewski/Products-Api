@@ -10,7 +10,8 @@ namespace Business.Services
         private readonly IAddressRepository _addressRepository;
 
         public SupplierService(ISupplierRepository supplierRepository,
-                               IAddressRepository addressRepository)
+                               IAddressRepository addressRepository,
+                               INotifier notifier) : base(notifier)
         {
             _supplierRepository = supplierRepository;
             _addressRepository = addressRepository;
@@ -19,7 +20,7 @@ namespace Business.Services
         public async Task Add(Supplier supplier)
         {
             if (!ExecuteValidation(new SupplierValidation(), supplier)
-                && !ExecuteValidation(new AddressValidation(), supplier.Address)) return;
+                || !ExecuteValidation(new AddressValidation(), supplier.Address)) return;
 
             if (_supplierRepository.GetEntities(x => x.Document == supplier.Document).Result.Any())
             {

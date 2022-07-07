@@ -1,4 +1,6 @@
-﻿using Business.Models;
+﻿using Business.Interfaces;
+using Business.Models;
+using Business.Notifications;
 using FluentValidation;
 using FluentValidation.Results;
 
@@ -6,6 +8,13 @@ namespace Business.Services
 {
     public abstract class BaseService
     {
+        private readonly INotifier _notifier;
+
+        protected BaseService(INotifier notifier)
+        {
+            _notifier = notifier;
+        }
+
         protected void Notify(ValidationResult validationResult)
         {
             foreach (var error in validationResult.Errors)
@@ -16,7 +25,7 @@ namespace Business.Services
 
         protected void Notify(string message)
         {
-            // propagar esse erro até a camada de apresentação
+            _notifier.Handle(new Notification(message));
         }
 
         protected bool ExecuteValidation<TV, TE>(TV validation, TE entity) where TV : AbstractValidator<TE> where TE : Entity

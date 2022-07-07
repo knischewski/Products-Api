@@ -10,13 +10,17 @@ namespace API.Controllers
     public class SuppliersController : MainController
     {
         private readonly ISupplierRepository _supplierRepository;
+        private readonly ISupplierService _supplierService;
         private readonly IMapper _mapper;
+        private readonly INotifier _notifier;
 
         public SuppliersController(ISupplierRepository supplierRepository,
-                                   IMapper mapper)
+                                   IMapper mapper,
+                                   INotifier notifier) : base (notifier)
         {
             _supplierRepository = supplierRepository;
             _mapper = mapper;
+            _notifier = notifier;
         }
 
         [HttpGet]
@@ -39,13 +43,11 @@ namespace API.Controllers
         [HttpPost]
         public async Task<ActionResult<SupplierViewModel>> Add(SupplierViewModel supplierViewModel)
         {
-            if (!ModelState.IsValid) return BadRequest();
+            if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-            // need create supplier and product service first
-            // remember: repository to search for / services to add, update, delete
-            await _supplierRepository.Add(_mapper.Map<Supplier>(supplierViewModel));
+            await _supplierService.Add(_mapper.Map<Supplier>(supplierViewModel));
 
-            return Ok();
+            return CustomResponse(supplierViewModel);
         }
 
         private async Task<SupplierViewModel> GetSupplierProductsAddress(Guid id)
