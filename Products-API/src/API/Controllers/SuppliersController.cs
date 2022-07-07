@@ -11,16 +11,19 @@ namespace API.Controllers
     {
         private readonly ISupplierRepository _supplierRepository;
         private readonly ISupplierService _supplierService;
+        private readonly IAddressRepository _addressRepository;
         private readonly IMapper _mapper;
-        private readonly INotifier _notifier;
 
         public SuppliersController(ISupplierRepository supplierRepository,
+                                   ISupplierService supplierService,
+                                   IAddressRepository addressRepository,
                                    IMapper mapper,
                                    INotifier notifier) : base (notifier)
         {
             _supplierRepository = supplierRepository;
+            _supplierService = supplierService;
+            _addressRepository = addressRepository;
             _mapper = mapper;
-            _notifier = notifier;
         }
 
         [HttpGet]
@@ -50,9 +53,61 @@ namespace API.Controllers
             return CustomResponse(supplierViewModel);
         }
 
+        [HttpPut("{id:guid}")]
+        public async Task<ActionResult<SupplierViewModel>> Update(Guid id, SupplierViewModel supplierViewModel)
+        {
+            if (id != supplierViewModel.Id)
+            {
+                NotifyError("O id informado é diferente do passado na query");
+                return CustomResponse(supplierViewModel);
+            }
+            
+            if (!ModelState.IsValid) return CustomResponse(ModelState);
+
+            await _supplierService.Update(_mapper.Map<Supplier>(supplierViewModel));
+
+            return CustomResponse(supplierViewModel);
+        }
+
+        [HttpDelete("{id:guid}")]
+        public async Task<ActionResult<SupplierViewModel>> Delete(Guid id)
+        {
+            var supplierViewModel = await GetSupplierAndAddress(id);
+
+            if (supplierViewModel == null) return NotFound();
+
+            await _supplierService.Delete(id);
+
+            return CustomResponse(supplierViewModel);
+        }
+
+        [HttpGet("obter-endereco/{id:guid}")]
+        public async Task<AddressViewModel> GetAddressById(Guid id)
+        {
+            var addressViewModel = _mapper.Map<AddressViewModel>(await _addressRepository.GetById(id));
+            return addressViewModel;
+        }
+
+        [HttpPut("atualizar-endereco/{id:guid}")]
+        public async Task<ActionResult> UpdateAddress(Guid id, AddressViewModel addressViewModel)
+        {
+            if (id != addressViewModel.Id) return BadRequest();
+
+            if (!ModelState.IsValid) return CustomResponse(ModelState);
+
+            await _supplierService.UpdateAddress(_mapper.Map<Address>(addressViewModel));
+
+            return CustomResponse(addressViewModel);
+        }
+
         private async Task<SupplierViewModel> GetSupplierProductsAddress(Guid id)
         {
             return _mapper.Map<SupplierViewModel>(await _supplierRepository.GetSupplierProductsAddress(id));
+        }
+
+        private async Task<SupplierViewModel> GetSupplierAndAddress(Guid id)
+        {
+            return _mapper.Map<SupplierViewModel>(await _supplierRepository.GetSupplierAddress(id));
         }
     }
 }
