@@ -1,6 +1,5 @@
 using API.Configuration;
 using Data.Context;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,15 +13,7 @@ builder.Services.AddDbContext<ProductDbContext>(options =>
 
 builder.Services.AddAutoMapper(typeof(Program));
 
-builder.Services.AddControllers();
-
-builder.Services.Configure<ApiBehaviorOptions>(opt =>
-{
-    opt.SuppressModelStateInvalidFilter = true;
-});
-
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.WebApiConfig();
 
 builder.Services.ResolveDependencies();
 
@@ -40,5 +31,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseMvcConfig();
 
 app.Run();
