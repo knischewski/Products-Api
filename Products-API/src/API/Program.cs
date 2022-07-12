@@ -11,6 +11,8 @@ builder.Services.AddDbContext<ProductDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+builder.Services.AddIdentityConfig(builder.Configuration);
+
 builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.WebApiConfig();
@@ -28,6 +30,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

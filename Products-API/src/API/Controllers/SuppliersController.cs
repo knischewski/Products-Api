@@ -2,10 +2,12 @@
 using AutoMapper;
 using Business.Interfaces;
 using Business.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
+    [Authorize]
     [Route("api/fornecedores")]
     public class SuppliersController : MainController
     {
@@ -26,6 +28,7 @@ namespace API.Controllers
             _mapper = mapper;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<SupplierViewModel>>> GetAll()
         {
