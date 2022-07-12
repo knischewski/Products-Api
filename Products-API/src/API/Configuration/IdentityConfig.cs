@@ -1,4 +1,5 @@
 ﻿using API.Data;
+using API.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,6 +18,7 @@ namespace API.Configuration
             services.AddDefaultIdentity<IdentityUser>()
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddErrorDescriber<IdentityMessagesPortuguese>()
                 .AddDefaultTokenProviders();
 
             return services;

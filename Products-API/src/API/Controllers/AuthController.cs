@@ -22,7 +22,7 @@ namespace API.Controllers
         [HttpPost("nova-conta")]
         public async Task<ActionResult> Register(RegisterUserViewModel registerUser)
         {
-            if (!ModelState.IsValid) return CustomResponse(registerUser);
+            if (!ModelState.IsValid) return CustomResponse(ModelState);
 
             var user = new IdentityUser
             {
