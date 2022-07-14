@@ -9,10 +9,21 @@ namespace API.Controllers
     public abstract class MainController : ControllerBase
     {
         private readonly INotifier _notifier;
+        public readonly IUser AppUser;
 
-        protected MainController(INotifier notifier)
+        protected Guid UserId { get; set; }
+        protected bool UserAuthenticated { get; set; }
+
+        protected MainController(INotifier notifier, IUser appUser)
         {
             _notifier = notifier;
+            AppUser = appUser;
+
+            if (appUser.IsAuthenticated())
+            {
+                UserId = appUser.GetUserId();
+                UserAuthenticated = true;
+            }
         }
 
         protected bool ValidOperation()

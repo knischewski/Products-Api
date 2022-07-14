@@ -1,4 +1,5 @@
-﻿using API.ViewModels;
+﻿using API.Extensions;
+using API.ViewModels;
 using AutoMapper;
 using Business.Interfaces;
 using Business.Models;
@@ -20,7 +21,8 @@ namespace API.Controllers
                                    ISupplierService supplierService,
                                    IAddressRepository addressRepository,
                                    IMapper mapper,
-                                   INotifier notifier) : base (notifier)
+                                   INotifier notifier,
+                                   IUser user) : base (notifier, user)
         {
             _supplierRepository = supplierRepository;
             _supplierService = supplierService;
@@ -28,7 +30,6 @@ namespace API.Controllers
             _mapper = mapper;
         }
 
-        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<SupplierViewModel>>> GetAll()
         {
@@ -46,6 +47,7 @@ namespace API.Controllers
             return Ok(result);
         }
 
+        [ClaimsAuthorize("Fornecedor","Adicionar")]
         [HttpPost]
         public async Task<ActionResult<SupplierViewModel>> Add(SupplierViewModel supplierViewModel)
         {
@@ -56,6 +58,7 @@ namespace API.Controllers
             return CustomResponse(supplierViewModel);
         }
 
+        [ClaimsAuthorize("Fornecedor", "Atualizar")]
         [HttpPut("{id:guid}")]
         public async Task<ActionResult<SupplierViewModel>> Update(Guid id, SupplierViewModel supplierViewModel)
         {
@@ -72,6 +75,7 @@ namespace API.Controllers
             return CustomResponse(supplierViewModel);
         }
 
+        [ClaimsAuthorize("Fornecedor", "Excluir")]
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult<SupplierViewModel>> Delete(Guid id)
         {
@@ -91,6 +95,7 @@ namespace API.Controllers
             return addressViewModel;
         }
 
+        [ClaimsAuthorize("Fornecedor", "Atualizar")]
         [HttpPut("atualizar-endereco/{id:guid}")]
         public async Task<ActionResult> UpdateAddress(Guid id, AddressViewModel addressViewModel)
         {

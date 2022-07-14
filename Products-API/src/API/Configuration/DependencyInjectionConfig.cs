@@ -1,4 +1,5 @@
-﻿using Business.Interfaces;
+﻿using API.Extensions;
+using Business.Interfaces;
 using Business.Notifications;
 using Business.Services;
 using Data.Context;
@@ -20,6 +21,9 @@ namespace API.Configuration
 
             services.AddScoped<ISupplierService, SupplierService>();
             services.AddScoped<IProductService, ProductService>();
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<IUser, AspNetUser>();
 
             return services;
         }

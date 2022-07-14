@@ -16,7 +16,8 @@ namespace API.Controllers
         public ProductsController(INotifier notifier,
                                   IProductRepository productRepository,
                                   IProductService productService,
-                                  IMapper mapper) : base(notifier)
+                                  IMapper mapper,
+                                  IUser user) : base(notifier, user)
         {
             _productRepository = productRepository;
             _productService = productService;
