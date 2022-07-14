@@ -24,9 +24,12 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseCors("Development");
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("Production");
 
 app.UseHttpsRedirection();
 
