@@ -25,14 +25,15 @@
       "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Production"
-      },
-      "IIS-Dev": {
-        "commandName": "IISExpress",
-        "launchBrowser": true,
-        "launchUrl": "swagger",
-        "environmentVariables": {
-          "ASPNETCORE_ENVIRONMENT": "Development"
-        }
+      }
+    },
+    "IIS-Dev": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
       }
     }
+  }
 }

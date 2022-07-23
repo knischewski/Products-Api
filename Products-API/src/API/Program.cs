@@ -17,6 +17,8 @@ builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.WebApiConfig();
 
+builder.Services.AddSwaggerConfig();
+
 builder.Services.ResolveDependencies();
 
 var app = builder.Build();

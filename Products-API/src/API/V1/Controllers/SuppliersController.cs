@@ -1,4 +1,5 @@
-﻿using API.Extensions;
+﻿using API.Controllers;
+using API.Extensions;
 using API.ViewModels;
 using AutoMapper;
 using Business.Interfaces;
@@ -6,10 +7,11 @@ using Business.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace API.Controllers
+namespace API.V1.Controllers
 {
     [Authorize]
-    [Route("api/fornecedores")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/fornecedores")]
     public class SuppliersController : MainController
     {
         private readonly ISupplierRepository _supplierRepository;
@@ -22,7 +24,7 @@ namespace API.Controllers
                                    IAddressRepository addressRepository,
                                    IMapper mapper,
                                    INotifier notifier,
-                                   IUser user) : base (notifier, user)
+                                   IUser user) : base(notifier, user)
         {
             _supplierRepository = supplierRepository;
             _supplierService = supplierService;
@@ -30,6 +32,7 @@ namespace API.Controllers
             _mapper = mapper;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<SupplierViewModel>>> GetAll()
         {
@@ -47,7 +50,7 @@ namespace API.Controllers
             return Ok(result);
         }
 
-        [ClaimsAuthorize("Fornecedor","Adicionar")]
+        [ClaimsAuthorize("Fornecedor", "Adicionar")]
         [HttpPost]
         public async Task<ActionResult<SupplierViewModel>> Add(SupplierViewModel supplierViewModel)
         {
@@ -67,7 +70,7 @@ namespace API.Controllers
                 NotifyError("O id informado é diferente do passado na query");
                 return CustomResponse(supplierViewModel);
             }
-            
+
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
             await _supplierService.Update(_mapper.Map<Supplier>(supplierViewModel));

@@ -1,4 +1,5 @@
-﻿using API.Extensions;
+﻿using API.Controllers;
+using API.Extensions;
 using API.ViewModels;
 using Business.Interfaces;
 using Microsoft.AspNetCore.Identity;
@@ -9,9 +10,10 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace API.Controllers
+namespace API.V1.Controllers
 {
-    [Route("api")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}")]
     public class AuthController : MainController
     {
         private readonly SignInManager<IdentityUser> _signInManager;
@@ -47,7 +49,7 @@ namespace API.Controllers
                 await _signInManager.SignInAsync(user, isPersistent: false);
                 return CustomResponse(await GenerateJwt(user.Email));
             }
-            foreach(var error in result.Errors)
+            foreach (var error in result.Errors)
             {
                 NotifyError(error.Description);
             }

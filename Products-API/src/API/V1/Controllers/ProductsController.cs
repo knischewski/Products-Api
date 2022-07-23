@@ -1,12 +1,14 @@
-﻿using API.ViewModels;
+﻿using API.Controllers;
+using API.ViewModels;
 using AutoMapper;
 using Business.Interfaces;
 using Business.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace API.Controllers
+namespace API.V1.Controllers
 {
-    [Route("api/produtos")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/produtos")]
     public class ProductsController : MainController
     {
         private readonly IProductRepository _productRepository;
@@ -84,7 +86,7 @@ namespace API.Controllers
             productUpdate.Name = productViewModel.Name;
             productUpdate.Description = productViewModel.Description;
             productUpdate.Value = productViewModel.Value;
-            productUpdate.Active = productViewModel.Active;            
+            productUpdate.Active = productViewModel.Active;
 
             await _productService.Update(_mapper.Map<Product>(productUpdate));
 
